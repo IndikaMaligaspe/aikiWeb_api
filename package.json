@@ -1,0 +1,8 @@
+{
+  "name": "aikiWeb_api",
+  "version": "1.0.0",
+  "description": "API service using plain vanila NODE ",
+  "main": "index.js",
+  "author": "Indika_M",
+  "license": "MIT"
+}
