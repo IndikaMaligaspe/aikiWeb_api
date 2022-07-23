@@ -86,6 +86,44 @@ const createMember = async (member) =>{
     })
 }
 
+const updateMember = async (id, member) => {
+    return new Promise(async(resolve, reject)=>{
+        try{
+            let row =  await findById(id);
+            if (!row || row.length == 0)
+                resolve(404);
+            let _member = row[0];
+
+            let query = `UPDATE ${SCHEMA}.members
+                         SET 
+                            nic = '${member.nic?member.nic:_member.nic}', 
+                            name = '${member.name?member.name:_member.name}', 
+                            address = '${member.address?member.address:_member.address}', 
+                            occupation  = '${member.occupation?member.occupation:_member.occupation}', 
+                            date_of_join = '${member.date_of_join?member.date_of_join.toISOString().slice(0, 19).replace('T', ' '):_member.date_of_join.toISOString().slice(0, 19).replace('T', ' ')}', 
+                            date_of_birth = '${member.date_of_birth?member.date_of_birth.toISOString().slice(0, 19).replace('T', ' '):_member.date_of_birth.toISOString().slice(0, 19).replace('T', ' ')}', 
+                            sex = '${member.sex?member.sex:_member.sex}'
+                         WHERE id = '${id}'`;
+            connection.query(query);
+            resolve(200);
+        } catch (err){
+            reject(err);
+        }
+    });
+};
+
+const deleteMember = async (id) =>{
+    return new Promise((resolve, reject) => {
+        try{
+            let query = `DELETE FROM ${SCHEMA}.members WHERE id = '${id}'`;
+
+            connection.query(query);
+            resolve(200);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
 const done = () =>{
     try{
         connection.end();
@@ -98,5 +136,7 @@ module.exports = {
     findAll,
     findByName,
     createMember,
+    updateMember,
+    deleteMember,
     done
 }

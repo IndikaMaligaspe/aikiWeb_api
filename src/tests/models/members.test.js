@@ -50,7 +50,7 @@ describe('Test Members model', ()=> {
         const q4 = `SELECT id FROM ${SCHEMA}.members WHERE NIC='${NIC2}'`;    
         
         let row =  await _executeQuery(q3, conn)
-        MED_ID1 =  row[0].id
+        MEM_ID1 =  row[0].id
 
         row = await _executeQuery(q4, conn);
         MEM_ID2  =  row[0].id
@@ -58,7 +58,7 @@ describe('Test Members model', ()=> {
     });
 
     test("Test findById", async () =>{
-        const member = await members.findById(MED_ID1);
+        const member = await members.findById(MEM_ID1);
         expect(member[0].name).toBe('Test User1');
     });
 
@@ -84,7 +84,35 @@ describe('Test Members model', ()=> {
         }
         const rowId = await members.createMember(member);
         expect(rowId).toBeGreaterThan(0);
-    })
+    });
+
+    test("Update existing Member", async() => {
+        const id = MEM_ID1;
+        const member = {
+            address:'Test Address New',
+            occupation:'Occupation New',
+        }
+
+        const updated = await members.updateMember(id, member);
+        expect(updated).toBe(200);
+    });
+
+    test("404 when update non existing Member", async() => {
+        const id = '100001';
+        const member = {
+            address:'Test Address New',
+            occupation:'Occupation New',
+        }
+
+        const updated = await members.updateMember(id, member);
+        expect(updated).toBe(404);
+    });
+    test("Delete Member", async() => {
+        const id = MEM_ID1;
+        const updated = await members.deleteMember(id);
+        expect(updated).toBe(200);
+    });
+
     afterAll(async ()=>{
         let q1 = `DELETE FROM ${SCHEMA}.members WHERE NIC IN ('${NIC1}','${NIC2}')`;
         await conn.query(q1);
