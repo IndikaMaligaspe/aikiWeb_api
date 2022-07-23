@@ -2,7 +2,14 @@
   "name": "aikiWeb_api",
   "version": "1.0.0",
   "description": "API service using plain vanila NODE ",
-  "main": "index.js",
+  "main": "src/index.js",
   "author": "Indika_M",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  }
 }
