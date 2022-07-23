@@ -11,7 +11,6 @@ const exec = async (path, req, res)=>{
             } catch (err) {
                 reject(err);
             }
-            
         } else if (_path[0].match(/getUsers\/([0-9]+)/) && req.method === 'GET') {
             getUserById(req, res);
         } else {
@@ -22,18 +21,29 @@ const exec = async (path, req, res)=>{
 
 const getUsers = async (req, res) => {
     return new Promise((resolve, reject)=> {
-        res.writeHead(200,  {"Content-Type": "application/json"});
-        res.end(JSON.stringify({"name":"Hello World WOOOAH"}));
-        resolve();
+        try{
+            res.writeHead(200,  {"Content-Type": "application/json"});
+            res.end(JSON.stringify({"name":"Hello World WOOOAH"}));
+            resolve();
+        } catch (err) {
+            reject (err);
+        }
+        
     });
     
 };
 
 const getUserById = async (req, res) => {
     return new Promise((resolve, reject)=> {
-        res.writeHead(200,  {"Content-Type": "application/json"});
-        res.end(JSON.stringify({"name":"Hello World WOOOAH with ID"}));
-        resolve();
+        try{
+            const id = req.url.split("/")[3]
+            res.writeHead(200,  {"Content-Type": "application/json"});
+            res.end(JSON.stringify({"name":"Hello World WOOOAH with ID ->"+id}));
+            resolve();
+        } catch (err) {
+            reject(err);
+        }
+
     });
 };
 
