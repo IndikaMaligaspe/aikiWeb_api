@@ -1,25 +1,28 @@
+const { Stats } = require("fs");
 const http = require("http");
 const { resolve } = require("path");
+
+const {findById} = require('../models/members')
 
 const exec = async (path, req, res)=>{
     const _path = path.split("?");
     console.log(_path,  req.method);
     return new Promise((resolve, reject)=>{
-        if (_path[0] == "getUsers" && req.method === 'GET') {
+        if (_path[0] == "" && req.method === 'GET') {
             try{
-                resolve(getUsers(req, res));
+                resolve(getMembers(req, res));
             } catch (err) {
                 reject(err);
             }
-        } else if (_path[0].match(/getUsers\/([0-9]+)/) && req.method === 'GET') {
-            getUserById(req, res);
+        } else if (_path[0].match(/([0-9]+)/) && req.method === 'GET') {
+            getMembersById(req, res);
         } else {
             notFound_404(req,res);
         }
     });
 };
 
-const getUsers = async (req, res) => {
+const getMembers = async (req, res) => {
     return new Promise((resolve, reject)=> {
         try{
             res.writeHead(200,  {"Content-Type": "application/json"});
@@ -33,17 +36,24 @@ const getUsers = async (req, res) => {
     
 };
 
-const getUserById = async (req, res) => {
-    return new Promise((resolve, reject)=> {
+const getMembersById = async (req, res) => {
+    return new Promise(async (resolve)=> {
+        let status;
+        let members;
         try{
-            const id = req.url.split("/")[3]
-            res.writeHead(200,  {"Content-Type": "application/json"});
-            res.end(JSON.stringify({"name":"Hello World WOOOAH with ID ->"+id}));
-            resolve();
+            const id = req.url.split("/")[2]
+            members = await findById(id);
+            if(!members || members.length == 0)
+                status = 404
+            else
+                status = 200;
         } catch (err) {
-            reject(err);
+            status = 500;
+            members = err
         }
-
+        res.writeHead(status,  {"Content-Type": "application/json"});
+        res.end(JSON.stringify(members));
+        resolve();
     });
 };
 
