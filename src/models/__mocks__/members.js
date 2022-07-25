@@ -26,9 +26,38 @@ async function findById(id) {
         if(member)
             resolve(member);    
     });
+};
+
+async function findAll() {
+    return new Promise((resolve) =>{
+        resolve(data);    
+    });
 }
 
 
+async function findByName(name) {
+    return new Promise((resolve) =>{
+        const member = data.filter((d)=>(d.name == name));
+        if(member)
+            resolve(member);    
+    });
+};
+
+async function createMember(member) {
+    return new Promise((resolve, reject) =>{
+        const length = data.length;
+        member["id"] = length+1;
+        const newLength = data.push(member);
+        if(newLength > length)
+            resolve(newLength);
+        else
+            reject()    
+    });
+}
+
 module.exports= {
-    findById
+    findById,
+    findAll,
+    findByName,
+    createMember,
 };
