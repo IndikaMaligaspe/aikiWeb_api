@@ -1,4 +1,4 @@
-const members = jest.createMockFromModule('./members')
+// const members = jest.createMockFromModule('./members')
 
 const data =  [
     {  "id":"1", 
@@ -53,45 +53,24 @@ async function findByNIC(nic) {
 
 async function createMember(member) {
     return new Promise((resolve, reject) =>{
-        const length = data.length;
-        member["id"] = length+1;
-        const newLength = data.push(member);
-        if(newLength > length)
-            resolve(newLength);
-        else
-            reject()    
+        const index = data.findIndex((m)=>(m.id==id));
+        if(index){resolve(400); return}
+        resolve(201);   
     });
 };
 
 async function updateMember(id, member) {
     return new Promise(async (resolve, reject) =>{
-        const _member = data.filter((d)=>(d.id == id));
-        if(_member.length == 0){
-            resolve(404);
-            return;
-        }
-        _member[0]['nic'] = member.nic ? member.nic:_member[0].nic;
-        _member[0]['name'] =member.name?member.name:_member[0].name;
-        _member[0]['address'] =member.address?member.address:_member[0].address;
-        _member[0]['occupation'] = member.occupation?member.occupation:_member[0].occupation;
-        _member[0]['date_of_join'] =member.date_of_join?member.date_of_join.toISOString().slice(0, 19).replace('T', ' '):_member[0].date_of_join.toISOString().slice(0, 19).replace('T', ' ');
-        _member[0]['date_of_birth'] =member.date_of_birth?member.date_of_birth.toISOString().slice(0, 19).replace('T', ' '):new Date(_member[0].date_of_birth).toISOString().slice(0, 19).replace('T', ' ');
-        _member[0]['sex'] =member.sex?member.sex:_member[0].sex;
         const index = data.findIndex((m)=>(m.id==id));
-        data.splice(index, 1, _member[0]);
+        if(!index){resolve(404); return}
         resolve(200);
     });
 };
 async function deleteMember(id) {
     return new Promise((resolve, reject) =>{
-        let length = data.length;
         const index = data.findIndex((m)=>(m.id==id));
-        data.splice(index, 1);
-        let newLength = data.length;
-        if(newLength < length)
-            resolve(200);
-        else
-            reject()    
+        if(!index){resolve(404); return}
+        resolve(200);
     });
 };
 

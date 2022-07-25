@@ -59,6 +59,24 @@ const findByName = async (name) => {
     })
 }
 
+const findByNIC = async (nic) => {
+    return new Promise((resolve, reject) =>{
+        try{
+            query = `SELECT id, nic, name, address, 
+                    occupation, date_of_birth, date_of_join, sex
+                    FROM ${SCHEMA}.members
+                    WHERE nic = '${nic}'
+                    `;
+            connection.query(query, (err, row)=>{
+                if(err) reject(err)
+                resolve(row)
+            })
+        }catch(err){
+            reject(err);
+        }
+    })
+}
+
 const createMember = async (member) =>{
     return new Promise((resolve, reject) => {
         try{
@@ -135,6 +153,7 @@ module.exports = {
     findById,
     findAll,
     findByName,
+    findByNIC,
     createMember,
     updateMember,
     deleteMember,

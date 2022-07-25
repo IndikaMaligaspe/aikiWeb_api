@@ -72,6 +72,12 @@ describe('Test Members model', ()=> {
         expect(membersArr[0].name).toBe('Test User1');
     });
 
+    test("Test findByNIC", async () =>{
+        const membersArr = await members.findByNIC(NIC1);
+        expect(membersArr[0].nic).toBe(NIC1);
+    });
+
+
     test("Create new Member", async() => {
         const member = {
             nic:NIC1,

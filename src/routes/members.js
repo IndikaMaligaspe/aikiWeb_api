@@ -2,11 +2,10 @@ const { Stats } = require("fs");
 const http = require("http");
 const { resolve } = require("path");
 
-const {findById} = require('../models/members')
+const service = require('../services/memberService')
 
 const exec = async (path, req, res)=>{
     const _path = path.split("?");
-    console.log(_path,  req.method);
     return new Promise((resolve, reject)=>{
         if (_path[0] == "" && req.method === 'GET') {
             try{
@@ -15,7 +14,7 @@ const exec = async (path, req, res)=>{
                 reject(err);
             }
         } else if (_path[0].match(/([0-9]+)/) && req.method === 'GET') {
-            getMembersById(req, res);
+            resolve(getMembersById(req, res));
         } else {
             notFound_404(req,res);
         }
@@ -42,7 +41,7 @@ const getMembersById = async (req, res) => {
         let members;
         try{
             const id = req.url.split("/")[2]
-            members = await findById(id);
+            members = await service.findById(id);
             if(!members || members.length == 0)
                 status = 404
             else

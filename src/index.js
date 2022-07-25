@@ -5,7 +5,7 @@ const host = 'localhost';
 const port = 8080;
 
 
-const requestListner = async (req, res)=>{
+async function requestListner (req, res){
     res.setHeader("Content-Type", "application/json");
     const reqArr = req.url.split("/");
     const path = reqArr.slice(2,reqArr.length).join("/");
@@ -27,5 +27,7 @@ const notFound_404 = (req, res)=>{
 
 const server = http.createServer(requestListner);
 server.listen(port, host, ()=>{
-    console.log(`Server started on  ${host}:${port}`);
+    // console.log(`Server started on  ${host}:${port}`);
 });
+
+module.exports = {requestListner}
